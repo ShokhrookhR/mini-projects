@@ -3,6 +3,7 @@ import { Skeleton } from './Skeleton';
 import { User } from './User';
 
 export const Users = ({ items, isLoading }) => {
+
   return (
     <>
       <div className="search">
@@ -13,13 +14,15 @@ export const Users = ({ items, isLoading }) => {
       </div>
       {isLoading ? (
         <div className="skeleton-list">
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
+          {items.map((obj) => (
+            <Skeleton />
+          ))}
         </div>
       ) : (
         <ul className="users-list">
-          <User />
+          {items.map((obj) => (
+            <User item={obj} />
+          ))}
         </ul>
       )}
       <button className="send-invite-btn">Отправить приглашение</button>
