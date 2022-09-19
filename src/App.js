@@ -8,9 +8,24 @@ import axios from 'axios';
 
 function App() {
   const [users, setUsers] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [invites, setInvites] = React.useState([]);
+  const [success, setSuccess] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState('');
+  const onClickInvite = (id) => {
+    if (invites.includes(id)) {
+      setInvites((prev) => prev.filter((_id) => _id !== id));
+    } else setInvites([...invites, id]);
+  };
+  const onClickSuccess = () => {
+    setSuccess(true);
+  };
+  const onChangeSearch = (event) => {
+    setSearchValue(event.target.value);
+  };
+  console.log(searchValue);
+
   React.useEffect(() => {
-    setIsLoading(true);
     axios
       .get('https://reqres.in/api/users')
       .then((res) => {
@@ -18,13 +33,24 @@ function App() {
       })
       .catch((err) => {
         alert('Произошла ошибка', err);
-      });
-    setIsLoading(false);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
   return (
     <div className="App">
-      <Users items={users} isLoading={isLoading} />
-      {/* <Success /> */}
+      {success ? (
+        <Success count={invites.length} />
+      ) : (
+        <Users
+          items={users}
+          isLoading={isLoading}
+          onClickInvite={onClickInvite}
+          invites={invites}
+          onClickSuccess={onClickSuccess}
+          searchValue={searchValue}
+          onChangeSearch={onChangeSearch}
+        />
+      )}
     </div>
   );
 }
